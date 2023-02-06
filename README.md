@@ -3,6 +3,8 @@
 ## Project setup
 ```
 npm install
+
+vue-router , firebase , vuefire
 ```
 
 ### Compiles and hot-reloads for development
