@@ -1,29 +1,35 @@
 <template>
-    <h1>Create an Account</h1>
-    <p><input type="text" placeholder="Email" v-model="email" /></p>
-    <p><input type="password" placeholder="Password" v-model="password" /></p>
-    <p><input type="password" placeholder="Repeat password" v-model="password2" /></p>
-    <p><button @click="register">Submit</button></p>
-  </template>
+  <h1>Create an Account</h1>
+  <p><input type="text" placeholder="Email" v-model="email" /></p>
+  <p><input type="password" placeholder="Password" v-model="password" /></p>
+  <p><input type="password" placeholder="Repeat password" v-model="password2" /></p>
+  <p><button @click="register">Submit</button></p>
+</template>
 
-  <script setup>
-  import { ref } from 'vue'
-  import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-  import router from '@/router';
-    const email = ref('')
-    const password = ref('')
-    const password2 = ref('')
-    const register = () => {
-      const auth = getAuth();
-      createUserWithEmailAndPassword(auth, email.value, password.value)
-      .then((userCredential) => {
-        console.log(userCredential)
-        console.log('Successfully registered!');
-        router.push('/');
-      })
-      .catch(error => {
-        console.log(error.code)
-        alert(error.message);
-      });
+<script setup>
+import { ref } from 'vue'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const email = ref('')
+const password = ref('')
+const password2 = ref('')
+
+const register = () => {
+  const auth = getAuth();
+  if (password.value !== password2.value) {
+    alert('Passwords do not match')
+    return
   }
-  </script>
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+  .then((userCredential) => {
+    console.log(userCredential)
+    router.push('/');
+  })
+  .catch(error => {
+    console.log(error.code)
+    alert(error.message);
+  });
+}
+</script>
