@@ -1,7 +1,7 @@
 <template>
     <h1>Login</h1>
-    <p><input type="text" placeholder="Email" v-model="email" /></p>
-    <p><input type="password" placeholder="Password" v-model="password" /></p>
+    <p class="required"><input type="text" required="required" placeholder="Email" v-model="email" /></p>
+    <p class="required"><input type="password" required="required" placeholder="Password" v-model="password" /></p>
     <p><button @click="login">Submit</button></p>
 </template>
 
@@ -41,3 +41,7 @@ const login = () => {
       });
 }
 </script>
+
+<style>
+@import "../assets/styles/main.css";
+</style>

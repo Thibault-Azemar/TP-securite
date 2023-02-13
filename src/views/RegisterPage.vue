@@ -1,8 +1,8 @@
 <template>
   <h1>Create an Account</h1>
-  <p><input type="text" required="required" placeholder="Email" v-model="email" /></p>
-  <p><input type="password" required="required" placeholder="Password" v-model="password" /></p>
-  <p><input type="password" required="required" placeholder="Repeat password" v-model="password2" /></p>
+  <p class="required"><input type="text" required="required" placeholder="Email" v-model="email" /></p>
+  <p class="required"><input type="password" required="required" placeholder="Password" v-model="password" /></p>
+  <p class="required"><input type="password" required="required" placeholder="Repeat password" v-model="password2" /></p>
   <p><button @click="register">Submit</button></p>
   <p v-if="password.length < 8"> Le mot de passe doit faire 8 caractères minimum</p>
   <p v-if="password.search(/(?=.*?[a-z])/)">Le mot de passe doit contenir au moins une lettre minuscule</p>
@@ -49,3 +49,7 @@ const register = () => {
   }
 }
 </script>
+
+<style>
+@import "../assets/styles/main.css";
+</style>
