@@ -4,3 +4,4 @@ import router from './router'
 import "./plugins/firebase";
 
 createApp(App).use(router).mount('#app')
+
