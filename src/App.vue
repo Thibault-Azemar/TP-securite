@@ -1,13 +1,13 @@
 <template>
   <div>
     <nav>
-      <router-link to="/"> Home </router-link> |
+      <router-link class="menu-item" to="/"> Home </router-link> |
       <span v-if="isLoggedIn">
-        <button @click="sign">Logout</button>
+        <a class="menu-item" @click="sign">Logout</a>
       </span>
       <span v-else>
-        <router-link to="/register"> Register </router-link> |
-        <router-link to="/login"> Login </router-link>
+        <router-link class="menu-item" to="/register"> Register </router-link> |
+        <router-link class="menu-item" to="/login"> Login </router-link>
       </span>
     </nav>
     <router-view></router-view>
@@ -38,12 +38,5 @@
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import "assets/styles/main.css";
 </style>
