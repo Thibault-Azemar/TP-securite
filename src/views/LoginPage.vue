@@ -1,23 +1,26 @@
 <template>
-
-<h1 class="title">Login</h1>
-
 <div class="box">
-  <div class="field">
-    <label class="label">Email</label>
-    <div class="control">
-        <input type="text" placeholder="e.g. alex@example.com" v-model="email" />
-    </div>
-  </div>
 
-  <div class="field">
-    <label class="label">Password</label>
-    <div class="control">
-        <input type="password" placeholder="********" v-model="password" />
-    </div>
-  </div>
+    <h1 class="title">Login</h1>
 
-  <p><button class="button is-primary" @click="login">Submit</button></p>
+    <div class="field">
+        <label class="label">Email</label>
+        <div class="control has-icons-left">
+            <input class="input" type="text" placeholder="e.g. alex@example.com" v-model="email" />
+            <span class="icon is-medium is-left">
+                <i class="fas fa-envelope"></i>
+            </span>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+            <input class="input" type="password" placeholder="********" v-model="password" />
+        </div>
+    </div>
+
+    <p><button class="button is-primary" @click="login">Submit</button></p>
 
 </div>
 </template>

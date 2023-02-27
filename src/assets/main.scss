@@ -27,6 +27,10 @@ $control-border-width: 2px;
 $input-border-color: transparent;
 $input-shadow: none;
 
+// Menu
+$breadcrumb-item-color: $blue;
+$breadcrumb-item-hover-color: $yellow;
+
 
 // Bulma Import
 @import '~bulma';
