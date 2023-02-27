@@ -5,6 +5,8 @@
 npm install
 
 vue-router , firebase , vuefire
+node-sass, sass-loader, 
+bulma
 ```
 
 ### Compiles and hot-reloads for development

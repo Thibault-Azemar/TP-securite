@@ -51,5 +51,4 @@ const register = () => {
 </script>
 
 <style>
-@import "../assets/styles/main.css";
 </style>
