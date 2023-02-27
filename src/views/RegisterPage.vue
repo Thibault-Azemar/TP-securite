@@ -49,6 +49,3 @@ const register = () => {
   }
 }
 </script>
-
-<style>
-</style>

@@ -1,16 +1,25 @@
 <template>
   <div>
-    <nav>
-      <router-link class="menu-item" to="/"> Home </router-link> |
-      <span v-if="isLoggedIn">
-        <a class="menu-item" @click="sign">Logout</a>
-      </span>
-      <span v-else>
-        <router-link class="menu-item" to="/register"> Register </router-link> |
-        <router-link class="menu-item" to="/login"> Login </router-link>
-      </span>
+    <nav class="level" v-if="isLoggedIn">
+        <p class="level-item has-text-centered">
+          <router-link class="link is-info" to="/"> Home </router-link>
+        </p>
+        <p class="level-item has-text-centered">
+          <a class="link is-info" @click="sign">Logout</a>
+        </p>
     </nav>
-    <router-view></router-view>
+    <nav class="level" v-else>
+        <p class="level-item has-text-centered">
+          <router-link class="link is-info" to="/"> Home </router-link>
+        </p>
+        <p class="level-item has-text-centered">
+          <router-link class="link is-info" to="/register"> Register </router-link>
+        </p>
+        <p class="level-item has-text-centered">
+          <router-link class="link is-info" to="/login"> Login </router-link>
+        </p>
+    </nav>
+  <router-view></router-view>
   </div>
 </template>
 
@@ -36,6 +45,3 @@
     router.push('/')
   }
 </script>
-
-<style>
-</style>

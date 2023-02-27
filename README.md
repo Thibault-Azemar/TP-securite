@@ -28,3 +28,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+https://app.netlify.com/sites/projectsecurityta/settings/domain

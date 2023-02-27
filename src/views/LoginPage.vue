@@ -1,8 +1,25 @@
 <template>
-    <h1>Login</h1>
-    <p class="required"><input type="text" required="required" placeholder="Email" v-model="email" /></p>
-    <p class="required"><input type="password" required="required" placeholder="Password" v-model="password" /></p>
-    <p><button @click="login">Submit</button></p>
+
+<h1 class="title">Login</h1>
+
+<div class="box">
+  <div class="field">
+    <label class="label">Email</label>
+    <div class="control">
+        <input type="text" placeholder="e.g. alex@example.com" v-model="email" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Password</label>
+    <div class="control">
+        <input type="password" placeholder="********" v-model="password" />
+    </div>
+  </div>
+
+  <p><button class="button is-primary" @click="login">Submit</button></p>
+
+</div>
 </template>
 
 <script setup>
@@ -41,6 +58,3 @@ const login = () => {
       });
 }
 </script>
-
-<style>
-</style>
