@@ -5,6 +5,8 @@ node_modules
 .github
 .firebase
 
+package-lock.json
+
 
 # local env files
 .env.local
