@@ -4,7 +4,7 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "home" */ './views/HomePage.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '../views/HomePage.vue'),
         meta : {
             requiresAuth: true
         }
@@ -12,12 +12,12 @@ const routes = [
     {
         path: '/login',
         name: 'Login',
-        component: () => import(/* webpackChunkName: "login" */ './views/LoginPage.vue')    
+        component: () => import(/* webpackChunkName: "login" */ '../views/LoginPage.vue')    
     },
     {
         path: '/register',
         name: 'Register',
-        component: () => import(/* webpackChunkName: "register" */ './views/RegisterPage.vue')    
+        component: () => import(/* webpackChunkName: "register" */ '../views/RegisterPage.vue')    
     }
 ]
 
