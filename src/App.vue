@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="breadcrumb is-centered is-large" aria-label="breadcrumbs">
+    <nav class="breadcrumb is-centered is-large" aria-label="breadcrumbs ">
     <ul v-if="isLoggedIn">
       <li><router-link class="link is-info" to="/"> Home </router-link></li>
       <li><a class="link is-info" @click="sign">Logout</a></li>
