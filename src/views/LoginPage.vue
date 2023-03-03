@@ -22,6 +22,8 @@
 
     <p><button class="button is-primary" @click="login">Submit</button></p>
 
+    <p class="help is-danger">{{ errMsg }}</p>
+
 </div>
 </template>
 
@@ -43,7 +45,6 @@ const login = () => {
     router.push('/');
     })
     .catch(error => {
-        print(error)
         switch (error.code) {
           case 'auth/invalid-email':
               errMsg.value = 'Invalid email'

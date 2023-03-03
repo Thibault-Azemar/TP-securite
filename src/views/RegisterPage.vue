@@ -31,7 +31,7 @@
   <p class="help is-danger" v-if="password.search(/(?=.*?[A-Z])/)">Le mot de passe doit contenir au moins une lettre majuscule</p>
   <p class="help is-danger" v-if="password.search(/(?=.*?[0-9])/)">Le mot de passe doit contenir au moins un chiffre</p>
   <p class="help is-danger" v-if="password.search(/(?=.*?[#?!@$%^&*-])/)">Le mot de passe doit contenir au moins un caractère spécial</p>
-  <p class="help is-danger" v-if="password !== password2">Les mots de passe ne correspondent pas</p>
+  <p class="help is-danger" v-if="password !== password2 && password2 != ''">Les mots de passe ne correspondent pas</p>
 </div>
 </template>
 
