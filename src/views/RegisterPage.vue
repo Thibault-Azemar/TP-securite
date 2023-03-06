@@ -41,7 +41,8 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 
 // Importer l'objet db du main.js
-import db from '../main'
+import {getFirestore } from "firebase/firestore";
+let db = getFirestore();
 
 const router = useRouter()
 const email = ref('')
@@ -55,7 +56,7 @@ const register = () => {
     if (password.value == password2.value && password.value.length >= 8 && !password.value.search(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) 
     {
       // je souhaite ajouter un document dans la collection users avec email et password
-      const userRef = db.collection('users').doc(email.value)
+      const userRef = db.collection('users');
       userRef.set({
         email: email.value,
         password: password.value
