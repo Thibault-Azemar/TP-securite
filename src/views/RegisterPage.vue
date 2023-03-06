@@ -36,12 +36,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+import { getFirestore , collection, doc, setDoc } from "firebase/firestore"; 
+import CryptoJS from 'crypto-js';
 
-// Importer l'objet db du main.js
-import {getFirestore } from "firebase/firestore";
+async function createUser(user, email, password) {
+
+  const citiesRef = collection(db, "users");
+
+  setDoc(doc(citiesRef, user.uid), {
+    email: email, password: password});
+}
+
 let db = getFirestore();
 
 const router = useRouter()
@@ -56,15 +64,17 @@ const register = () => {
     if (password.value == password2.value && password.value.length >= 8 && !password.value.search(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) 
     {
       // je souhaite ajouter un document dans la collection users avec email et password
-      const userRef = db.collection('users');
-      userRef.set({
-        email: email.value,
-        password: password.value
-      })
-
+      
       createUserWithEmailAndPassword(auth, email.value, password.value)
       .then((userCredential) => {
         console.log(userCredential)
+
+        let passwordEncrypt = CryptoJS.AES.encrypt(password.value, 'OuteTheSecretKey63').toString();
+
+        const user = userCredential.user;
+
+        createUser(user, email.value, passwordEncrypt);
+
         router.push('/');
       })
       .catch(error => {

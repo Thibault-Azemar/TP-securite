@@ -1,25 +1,23 @@
 <template>
     <main>
-        <h1 class="title">Hello world!</h1>
+        <h1 class="title">Films and Series</h1>
     </main>
+    <div class="save-btn">
+        <button @click="showModal = true">Save</button>
+    </div>
+    <AddShowModal v-show="showModal" @close-modal="showModal = false"/>
 </template>
-<script setup>
-import {getFirestore, getDoc, doc} from "firebase/firestore";
-let db = getFirestore();
+<script>
 
-console.log(db);
+import AddShowModal from '../components/Home/AddShowModal.vue'
 
-async function getUser() {
-    const docRef = doc(db, "user", "ULBnRERZnCKtXgvCr2Pq");
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists) {
-        console.log('No such document!');
-    } else {
-        console.log('Document data:', docSnap.data());
+export default {
+  components: { AddShowModal },
+  data() {
+    return {
+      showModal: false,
     }
+  },
 }
-
-getUser();
 
 </script>

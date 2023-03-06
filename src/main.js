@@ -5,7 +5,10 @@ import "./firebase";
 
 require('@/assets/main.scss');
 
-createApp(App).use(router).mount('#app')
+// 1. Assign app to a variable
+let app = createApp(App)
+
+app.use(router).mount('#app')
 
 
 
