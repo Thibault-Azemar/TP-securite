@@ -3,7 +3,7 @@
         <h1 class="title">Films and Series</h1>
     </main>
     <div class="save-btn">
-        <button @click="showModal = true">Save</button>
+        <button @click="showModal = true">Add show</button>
     </div>
     <AddShowModal v-show="showModal" @close-modal="showModal = false"/>
 </template>

@@ -11,12 +11,9 @@
   
   .modal-new {
     text-align: center;
-    background-color: white;
-    height: 500px;
     width: 500px;
-    margin-top: 10%;
     padding: 60px 0;
-    border-radius: 20px;
+    margin: auto;
   }
   .close {
     margin: 10% 0 0 16px;
@@ -26,3 +23,4 @@
   .check {
     width: 150px;
   }
+  
