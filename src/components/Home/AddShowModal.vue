@@ -57,7 +57,7 @@
             <input class="rating" max="5" step="0.5" type="range" value="1">
         </div>
         </div>
-        <p><button class="button is-primary">Submit</button></p>
+        <p><button class="button is-primary" @click="register">Submit</button></p>
     </div>
     <div class="modal-close is-large" @click="$emit('close-modal')">
     <p> Fermer </p>
@@ -66,7 +66,19 @@
     </template>
     
     <script>
+    import { getFirestore , collection, doc, setDoc } from "firebase/firestore"; 
+
     export default {
+    }
+
+    let db = getFirestore();
+
+    async function AddShow() {
+
+    }
+
+    const register = () => {
+        AddShow();
     }
     </script>
     
