@@ -8,21 +8,21 @@
         <table class="table is-striped is-fullwidth is-hoverable">
             <thead>
                 <tr>
-                    <th>Type</th>
-                    <th>Title</th>
-                    <th>Director</th>
-                    <th>Cast</th>
-                    <th>Description</th>
-                    <th>Country</th>
-                    <th>Release date</th>
-                    <th>Duration</th>
-                    <th>Genre</th>
-                    <th>Note</th>
+                    <th @click="sort('type')">Type</th>
+                    <th @click="sort('title')">Title</th>
+                    <th @click="sort('director')">Director</th>
+                    <th @click="sort('cast')">Cast</th>
+                    <th @click="sort('description')">Description</th>
+                    <th @click="sort('country')">Country</th>
+                    <th @click="sort('releasedate')">Release date</th>
+                    <th @click="sort('duration')">Duration</th>
+                    <th @click="sort('typeshow')">Genre</th>
+                    <th @click="sort('wishlist')">Note</th>
                     <th>Wishlist</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="show in shows" :key="show.id">
+                <tr v-for="show in SortedShows" :key="show.id">
                     <td>{{ show.type }}</td>
                     <td>{{ show.title }}</td>
                     <td>{{ show.directorString }}</td>
@@ -37,6 +37,11 @@
                 </tr>
             </tbody>
         </table>
+        <p>
+          <button @click="prevPage">Previous</button> 
+          <button @click="nextPage">Next</button>
+        </p>
+        debug: sort={{currentSort}}, dir={{currentSortDir}}
     </div>
     <AddShowModal v-show="showModal" @close-modal="showModal = false"/>
 </template>
@@ -57,7 +62,11 @@ export default {
       showModal: false,
       shows : shows,
       searchText: '',
-      fuse : fuse
+      fuse : fuse,
+      currentSort:'name',
+      currentSortDir:'asc',
+      pageSize:2,
+      currentPage:1
     }
   },
   methods:{
@@ -73,16 +82,42 @@ export default {
                 show.directorString = show.director.join(',').replaceAll(',', ', ');
             });
             console.log(this.shows)
-            console.log(this.fuse.search('Among'))
         },
     search() {
-      const searchRegex = new RegExp(this.searchText, 'i');
-      this.shows = this.shows.filter(show => searchRegex.test(show.title));
+      this.shows = this.fuse.search(this.searchText);
     },
-
+    sort:function(s) {
+    //if s == current sort, reverse
+    if(s === this.currentSort) {
+      this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+    }
+    this.currentSort = s;
+    },
+    nextPage:function() {
+    if((this.currentPage*this.pageSize) < this.shows.length) this.currentPage++;
+    },
+    prevPage:function() {
+      if(this.currentPage > 1) this.currentPage--;
+    }
   },
   beforeMount() {
     this.getShows();
+  },
+  computed: {
+    SortedShows:function() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return this.shows.sort((a,b) => {
+        let modifier = 1;
+        if(this.currentSortDir === 'desc') modifier = -1;
+        if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+        if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+        return 0;
+      }).filter((row, index) => {
+        let start = (this.currentPage-1)*this.pageSize;
+        let end = this.currentPage*this.pageSize;
+        if(index >= start && index < end) return true;
+      });
+    }
   }
 }
 
