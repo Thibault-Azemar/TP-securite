@@ -4,60 +4,60 @@
         <p> Ajouter un film ou une série</p>
         <div class="control">
             <label class="radio">
-                <input type="radio" name="answer" value="film" v-model="picked">Film
+                <input type="radio" name="answer" value="Film" v-model="picked">Film
             </label>
             <label class="radio">
-                <input type="radio" name="answer" value="serie" v-model="picked">Serie
+                <input type="radio" name="answer" value="Serie" v-model="picked">Serie
             </label>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Titre du film" v-model="title">
+            <input class="input" type="text" placeholder="Titre du film" id="title" v-model="title">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <textarea class="textarea" placeholder="Description" v-model="description"></textarea>
+            <textarea class="textarea" placeholder="Description" id = "description" v-model="description"></textarea>
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Nom du/des réalisateurs" v-model="director">
+            <input class="input" type="text" placeholder="Nom du/des réalisateurs" id = "director" v-model="director">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Nom du/des acteurs" v-model="cast">
+            <input class="input" type="text" placeholder="Nom du/des acteurs" id = "cast" v-model="cast">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Pays de réalisation" v-model="country">
+            <input class="input" type="text" placeholder="Pays de réalisation" id = "country" v-model="country">
         </div>
         </div>
         <div class="field">
             <label class="label">Date de sortie</label>
         <div class="control">
-            <input class="input" type="month" placeholder="Date de sortie" v-model="releasedate">
+            <input class="input" type="text" placeholder="Date de sortie (année)" id = "releasedate" v-model="releasedate">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Durée du film" v-model="duration">
+            <input class="input" type="text" placeholder="Durée du film (en minutes)" id = "duration" v-model="duration">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Type du film" v-model="typeshow">
+            <input class="input" type="text" placeholder="Type du film" id = "typeshow" v-model="typeshow">
         </div>
         </div>
         <div class="field">
             <label class="label">Note</label>
         <div class="control">
-            <input class="rating" max="5" step="0.5" type="range" value="1">
+            <input class="rating" max="5" step="0.5" type="range" id="note" v-model="note">
         </div>
         </div>
-        <p><button class="button is-primary" @click="register">Submit</button></p>
+        <p><button class="button is-primary" @click="SaveShow">Submit</button></p>
     </div>
     <div class="modal-close is-large" @click="$emit('close-modal')">
     <p> Fermer </p>
@@ -66,20 +66,49 @@
     </template>
     
     <script>
-    import { getFirestore , collection, doc, setDoc } from "firebase/firestore"; 
+    import { getFirestore , doc, setDoc, collection } from "firebase/firestore";
 
     export default {
+        name: "NewShow",
+        methods: {
+            SaveShow : SaveShow,
+        },
     }
 
     let db = getFirestore();
 
-    async function AddShow() {
+    function SaveShow(){
+        console.log("test")
+        const picked = document.querySelector('input[name="answer"]:checked').value;
+        const title = document.getElementById('title').value;
+        const director = document.getElementById('director').value.split(',');
+        const cast = document.getElementById('cast').value.split(',');
+        const description = document.getElementById('description').value;
+        const country = document.getElementById('country').value.split(',');
+        const releasedate = document.getElementById('releasedate').value;
+        const duration = document.getElementById('duration').value;
+        const typeshow = document.getElementById('typeshow').value.split(',');
+        const note = document.getElementById('note').value;
+
+        const shows = collection(db, "shows");
+        setDoc(doc(shows), {
+            type : picked,
+            title: title,
+            director: director,
+            cast: cast,
+            description: description,
+            country: country,
+            releasedate: releasedate,
+            duration: duration,
+            typeshow: typeshow,
+            note: note,
+            dateAdded: new Date(),
+        });
+
+        this.$emit('close-modal');
 
     }
 
-    const register = () => {
-        AddShow();
-    }
     </script>
     
     <style scoped>
