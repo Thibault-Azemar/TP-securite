@@ -24,14 +24,14 @@
             <tbody>
                 <tr v-for="show in SortedShows" :key="show.id">
                     <td>{{ show.type }}</td>
-                    <td>{{ show.title }}</td>
-                    <td>{{ show.directorString }}</td>
+                    <td v-html="highlightMatches(show.title)"></td>
+                    <td v-html="highlightMatches(show.directorString)"></td>
                     <td>{{ show.castString }}</td>
-                    <td>{{ show.description }}</td>
-                    <td>{{ show.country }}</td>
-                    <td>{{ show.releasedate }}</td>
+                    <td v-html="highlightMatches(show.description)"></td>
+                    <td v-html="highlightMatches(show.country)"></td>
+                    <td v-html="highlightMatches(show.releasedate)"></td>
                     <td>{{ show.duration }}</td>
-                    <td>{{ show.typeshow }}</td>
+                    <td v-html="highlightMatches(show.typeshow)"></td>
                     <td>{{ show.note }}</td>
                     <td>{{ show.wishlist }}</td>
                 </tr>
@@ -48,21 +48,16 @@
 <script>
 import { getFirestore, getDocs, collection } from "firebase/firestore";
 import AddShowModal from '../components/Home/AddShowModal.vue';
-import Fuse from 'fuse.js'
 
 export default {
   components: { AddShowModal },
   data() {
     const shows=[];
-    const fuse = new Fuse(shows, {
-     keys: ['title', 'director', 'cast', 'description', 'country', 'releasedate', 'duration', 'typeshow', 'note', 'wishlist']
-      })
 
     return {
       showModal: false,
       shows : shows,
       searchText: '',
-      fuse : fuse,
       currentSort:'name',
       currentSortDir:'asc',
       pageSize:2,
@@ -70,6 +65,13 @@ export default {
     }
   },
   methods:{
+    highlightMatches(text) {
+            const matchExists = text.toLowerCase().includes(this.searchText.toLowerCase());
+            if (!matchExists) return text;
+
+            const re = new RegExp(this.searchText, 'ig');
+            return text.replace(re, matchedText => `<strong>${matchedText}</strong>`);
+        },
     getShows: async function () {
             const db = getFirestore();
             const showsRef = collection(db, "shows");
@@ -83,8 +85,8 @@ export default {
             });
             console.log(this.shows)
         },
-    search() {
-      this.shows = this.fuse.search(this.searchText);
+    search: function() {
+
     },
     sort:function(s) {
     //if s == current sort, reverse
@@ -98,7 +100,8 @@ export default {
     },
     prevPage:function() {
       if(this.currentPage > 1) this.currentPage--;
-    }
+    },
+
   },
   beforeMount() {
     this.getShows();
@@ -112,6 +115,20 @@ export default {
         if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
         if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
         return 0;
+      }).filter(row => {
+        const title = row.title.toLowerCase();
+        const directorString = row.directorString.toLowerCase();
+        const description = row.description.toLowerCase();
+        const country = row.country.toLowerCase();
+        const releasedate = row.releasedate.toLowerCase();
+        const typeshow = row.typeshow.toLowerCase();
+
+        return title.includes(this.searchText.toLowerCase()) || 
+        directorString.includes(this.searchText.toLowerCase()) || 
+        description.includes(this.searchText.toLowerCase()) || 
+        country.includes(this.searchText.toLowerCase()) || 
+        releasedate.includes(this.searchText.toLowerCase()) || 
+        typeshow.includes(this.searchText.toLowerCase());
       }).filter((row, index) => {
         let start = (this.currentPage-1)*this.pageSize;
         let end = this.currentPage*this.pageSize;
