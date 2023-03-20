@@ -7,6 +7,7 @@ npm install
 vue-router , firebase , vuefire
 node-sass, sass-loader, 
 bulma
+fuse.js
 
 npm install -g firebase-toolsfirebase login
 ```

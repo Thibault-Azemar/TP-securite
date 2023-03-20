@@ -3,6 +3,7 @@
         <h1 class="title">Films and Series</h1>
     </main>
     <button class="button" @click="showModal = true">Add show</button>
+    <input type="text" id="search" v-model="searchText" @input="search">
     <div>
         <table class="table is-striped is-fullwidth is-hoverable">
             <thead>
@@ -32,6 +33,7 @@
                     <td>{{ show.duration }}</td>
                     <td>{{ show.typeshow }}</td>
                     <td>{{ show.note }}</td>
+                    <td>{{ show.wishlist }}</td>
                 </tr>
             </tbody>
         </table>
@@ -40,16 +42,22 @@
 </template>
 <script>
 import { getFirestore, getDocs, collection } from "firebase/firestore";
-import AddShowModal from '../components/Home/AddShowModal.vue'
+import AddShowModal from '../components/Home/AddShowModal.vue';
+import Fuse from 'fuse.js'
 
 export default {
   components: { AddShowModal },
   data() {
     const shows=[];
+    const fuse = new Fuse(shows, {
+     keys: ['title', 'director', 'cast', 'description', 'country', 'releasedate', 'duration', 'typeshow', 'note', 'wishlist']
+      })
 
     return {
       showModal: false,
-      shows : shows
+      shows : shows,
+      searchText: '',
+      fuse : fuse
     }
   },
   methods:{
@@ -65,7 +73,13 @@ export default {
                 show.directorString = show.director.join(',').replaceAll(',', ', ');
             });
             console.log(this.shows)
-        }
+            console.log(this.fuse.search('Among'))
+        },
+    search() {
+      const searchRegex = new RegExp(this.searchText, 'i');
+      this.shows = this.shows.filter(show => searchRegex.test(show.title));
+    },
+
   },
   beforeMount() {
     this.getShows();
