@@ -19,6 +19,7 @@
                     <th @click="sort('typeshow')">Genre</th>
                     <th @click="sort('wishlist')">Note</th>
                     <th>Wishlist</th>
+                    <th>Regardé</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,8 +33,9 @@
                     <td v-html="highlightMatches(show.releasedate)"></td>
                     <td>{{ show.duration }}</td>
                     <td v-html="highlightMatches(show.typeshow)"></td>
-                    <td>{{ show.note }}</td>
-                    <td>{{ show.wishlist }}</td>
+                    <td>{{ show.ratingStars }}</td>
+                    <td @click="changeWish">{{ show.wishlist }}</td>
+                    <td @click="changeSeen">{{ show.seen }}</td>
                 </tr>
             </tbody>
         </table>
@@ -65,6 +67,12 @@ export default {
     }
   },
   methods:{
+    changeSeen() {
+      console.log("change seen");
+    },
+    changeWish() {
+      console.log("change wish");
+    },
     highlightMatches(text) {
             const matchExists = text.toLowerCase().includes(this.searchText.toLowerCase());
             if (!matchExists) return text;
@@ -82,6 +90,21 @@ export default {
             this.shows.forEach((show) => {
                 show.castString = show.cast.join(',').replaceAll(',', ', ');
                 show.directorString = show.director.join(',').replaceAll(',', ', ');
+
+                if (show.seen) {
+                    show.seen = "✅";
+                } else {
+                    show.seen = "❌";
+                }
+                if (show.wishlist) {
+                    show.wishlist = "❤️";
+                } else {
+                    show.wishlist = "🤍";
+                }
+                show.ratingStars = "";
+                for (let i = 0; i < show.note; i++) {
+                    show.ratingStars += "⭐";
+                }
             });
             console.log(this.shows)
         },
