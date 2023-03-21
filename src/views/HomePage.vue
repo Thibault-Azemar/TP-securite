@@ -34,8 +34,8 @@
                     <td>{{ show.duration }}</td>
                     <td v-html="highlightMatches(show.typeshow)"></td>
                     <td>{{ show.ratingStars }}</td>
-                    <td @click="changeWish">{{ show.wishlist }}</td>
-                    <td @click="changeSeen">{{ show.seen }}</td>
+                    <td @click="changeWish(show)">{{ show.wishlist }}</td>
+                    <td @click="changeSeen(show)">{{ show.seen }}</td>
                 </tr>
             </tbody>
         </table>
@@ -48,17 +48,23 @@
     <AddShowModal v-show="showModal" @close-modal="showModal = false"/>
 </template>
 <script>
-import { getFirestore, getDocs, collection } from "firebase/firestore";
+import { getFirestore, getDocs, collection , doc, setDoc} from "firebase/firestore";
 import AddShowModal from '../components/Home/AddShowModal.vue';
+import { getAuth } from 'firebase/auth';
 
 export default {
   components: { AddShowModal },
   data() {
     const shows=[];
+    const auth = getAuth();
+    let db = getFirestore();
+    const usershows = collection(db, "usershows");
 
     return {
       showModal: false,
       shows : shows,
+      auth,
+      usershows,
       searchText: '',
       currentSort:'name',
       currentSortDir:'asc',
@@ -67,11 +73,29 @@ export default {
     }
   },
   methods:{
-    changeSeen() {
-      console.log("change seen");
+    changeSeen(show) {
+      console.log(this.auth.currentUser.uid)
+      console.log(show)
+      if (show.seen === "✅") {
+        show.seen = "❌";
+
+      } else {
+        setDoc(doc(this.usershows), {
+          userid: this.auth.currentUser.uid,
+          showlist: show.id.split(","),
+          wishlist: false,
+        });
+        show.seen = "✅";
+      }
     },
-    changeWish() {
-      console.log("change wish");
+    changeWish(show) {
+      console.log(this.auth.currentUser.uid)
+      console.log(show)
+      if (show.wishlist === "❤️") {
+        show.wishlist = "🤍";
+      } else {
+        show.wishlist = "❤️";
+      }
     },
     highlightMatches(text) {
             const matchExists = text.toLowerCase().includes(this.searchText.toLowerCase());
@@ -86,6 +110,7 @@ export default {
             const querySnapshot = await getDocs(showsRef);
             querySnapshot.forEach((doc) => {
                 this.shows.push(doc.data());
+                this.shows[this.shows.length - 1].id = doc.id;
             });
             this.shows.forEach((show) => {
                 show.castString = show.cast.join(',').replaceAll(',', ', ');
