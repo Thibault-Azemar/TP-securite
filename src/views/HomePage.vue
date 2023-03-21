@@ -107,6 +107,24 @@ export default {
     getShows: async function () {
             const db = getFirestore();
             const showsRef = collection(db, "shows");
+
+            // accéder à une table firestore identifé par l'identifiant mail utilisateur ou en créer une nouvelle si elle n'existe pas
+            const usershowsRef = collection(db, "usershows");
+            const querySnapshot2 = await getDocs(usershowsRef, this.auth.currentUser.uid);
+            if (querySnapshot2.empty) {
+              setDoc(doc(usershowsRef, this.auth.currentUser.uid), {
+                userid: this.auth.currentUser.uid,
+                showlist: "test3",
+                wishlist: "test3",
+              });
+            }
+            else {
+              querySnapshot2.forEach((doc) => {
+                console.log(doc.data());
+              });
+            }
+
+            // récupérer les données de la table firestore
             const querySnapshot = await getDocs(showsRef);
             querySnapshot.forEach((doc) => {
                 this.shows.push(doc.data());
@@ -132,21 +150,7 @@ export default {
                 }
             });
 
-            // accéder à une table firestore identifé par l'identifiant mail utilisateur ou en créer une nouvelle si elle n'existe pas
-            const usershowsRef = collection(db, "usershows");
-            const querySnapshot2 = await getDocs(usershowsRef, this.auth.currentUser.uid);
-            if (querySnapshot2.empty) {
-              setDoc(doc(usershowsRef, this.auth.currentUser.uid), {
-                userid: this.auth.currentUser.uid,
-                showlist: "test3",
-                wishlist: "test3",
-              });
-            }
-            else {
-              querySnapshot2.forEach((doc) => {
-                console.log(doc.data());
-              });
-            }
+            
             
         },
     search: function() {
