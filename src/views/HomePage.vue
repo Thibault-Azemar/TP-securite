@@ -56,6 +56,8 @@ export default {
   components: { AddShowModal },
   data() {
     const shows=[];
+    const seenList = [];
+    const wishList = [];
     const auth = getAuth();
     let db = getFirestore();
     const usershows = collection(db, "usershows");
@@ -63,6 +65,8 @@ export default {
     return {
       showModal: false,
       shows : shows,
+      seenList : seenList,
+      wishList : wishList,
       auth,
       usershows,
       searchText: '',
@@ -74,28 +78,38 @@ export default {
   },
   methods:{
     changeSeen(show) {
-      console.log(this.auth.currentUser.uid)
-      console.log(show)
+      console.log(this.seenList)
       if (show.seen === "✅") {
+        this.seenList.splice(this.seenList.indexOf(show.id), 1);
         show.seen = "❌";
-
       } else {
-        setDoc(doc(this.usershows), {
-          userid: this.auth.currentUser.uid,
-          showlist: show.id.split(","),
-          wishlist: false,
-        });
+        this.seenList.push(show.id);
         show.seen = "✅";
       }
+      const usershowsRef = collection(this.db, "usershows");
+      setDoc(doc(usershowsRef, this.auth.currentUser.uid), {
+        userid: this.auth.currentUser.uid,
+        seenlist: this.seenList,
+        wishlist: this.wishList,
+      });
+      console.log(this.seenList)
     },
     changeWish(show) {
-      console.log(this.auth.currentUser.uid)
-      console.log(show)
+      console.log(this.wishList)
       if (show.wishlist === "❤️") {
+        this.wishList.splice(this.wishList.indexOf(show.id), 1);
         show.wishlist = "🤍";
       } else {
+        this.wishList.push(show.id);
         show.wishlist = "❤️";
       }
+      const usershowsRef = collection(this.db, "usershows");
+      setDoc(doc(usershowsRef, this.auth.currentUser.uid), {
+        userid: this.auth.currentUser.uid,
+        seenlist: this.seenList,
+        wishlist: this.wishList,
+      });
+      console.log(this.wishList)
     },
     highlightMatches(text) {
             const matchExists = text.toLowerCase().includes(this.searchText.toLowerCase());
@@ -115,13 +129,14 @@ export default {
             if (querySnapshot2.empty) {
               setDoc(doc(usershowsRef, this.auth.currentUser.uid), {
                 userid: this.auth.currentUser.uid,
-                showlist: "test3",
-                wishlist: "test3",
+                seenlist: this.seenList,
+                wishlist: this.wishList,
               });
             }
             else {
               querySnapshot2.forEach((doc) => {
-                console.log(doc.data());
+                this.seenList = doc.data().seenlist;
+                this.wishList = doc.data().wishlist;
               });
             }
 
@@ -135,12 +150,12 @@ export default {
                 show.castString = show.cast.join(',').replaceAll(',', ', ');
                 show.directorString = show.director.join(',').replaceAll(',', ', ');
 
-                if (show.seen) {
+                if (show.id in this.seenList) {
                     show.seen = "✅";
                 } else {
                     show.seen = "❌";
                 }
-                if (show.wishlist) {
+                if (show.id in this.wishList) {
                     show.wishlist = "❤️";
                 } else {
                     show.wishlist = "🤍";
