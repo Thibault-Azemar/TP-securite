@@ -107,6 +107,7 @@ export default {
     getShows: async function () {
             const db = getFirestore();
             const showsRef = collection(db, "shows");
+            const querySnapshot = await getDocs(showsRef);
 
             // accéder à une table firestore identifé par l'identifiant mail utilisateur ou en créer une nouvelle si elle n'existe pas
             const usershowsRef = collection(db, "usershows");
@@ -125,7 +126,7 @@ export default {
             }
 
             // récupérer les données de la table firestore
-            const querySnapshot = await getDocs(showsRef);
+            
             querySnapshot.forEach((doc) => {
                 this.shows.push(doc.data());
                 this.shows[this.shows.length - 1].id = doc.id;
