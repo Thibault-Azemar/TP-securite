@@ -48,7 +48,7 @@
     <AddShowModal v-show="showModal" @close-modal="showModal = false"/>
 </template>
 <script>
-import { getFirestore, getDocs, collection , doc, setDoc} from "firebase/firestore";
+import { getFirestore, getDocs, collection , doc, setDoc, updateDoc} from "firebase/firestore";
 import AddShowModal from '../components/Home/AddShowModal.vue';
 import { getAuth } from 'firebase/auth';
 
@@ -59,7 +59,7 @@ export default {
     const seenList = [];
     const wishList = [];
     const auth = getAuth();
-    let db = getFirestore();
+    const db = getFirestore();
     const usershows = collection(db, "usershows");
 
     return {
@@ -67,6 +67,7 @@ export default {
       shows : shows,
       seenList : seenList,
       wishList : wishList,
+      db : db,
       auth,
       usershows,
       searchText: '',
@@ -86,12 +87,12 @@ export default {
         this.seenList.push(show.id);
         show.seen = "✅";
       }
+
       const usershowsRef = collection(this.db, "usershows");
-      setDoc(doc(usershowsRef, this.auth.currentUser.uid), {
-        userid: this.auth.currentUser.uid,
+      
+      updateDoc(doc(usershowsRef, this.auth.currentUser.uid), {
         seenlist: this.seenList,
-        wishlist: this.wishList,
-      });
+      }, { merge: true });
       console.log(this.seenList)
     },
     changeWish(show) {
@@ -103,13 +104,13 @@ export default {
         this.wishList.push(show.id);
         show.wishlist = "❤️";
       }
+
       const usershowsRef = collection(this.db, "usershows");
-      setDoc(doc(usershowsRef, this.auth.currentUser.uid), {
-        userid: this.auth.currentUser.uid,
-        seenlist: this.seenList,
+      updateDoc(doc(usershowsRef, this.auth.currentUser.uid), {
         wishlist: this.wishList,
-      });
+      }, { merge: true });
       console.log(this.wishList)
+
     },
     highlightMatches(text) {
             const matchExists = text.toLowerCase().includes(this.searchText.toLowerCase());
@@ -136,7 +137,9 @@ export default {
             else {
               querySnapshot2.forEach((doc) => {
                 this.seenList = doc.data().seenlist;
+                console.log(this.seenList)
                 this.wishList = doc.data().wishlist;
+                console.log(this.wishList)
               });
             }
 
@@ -149,16 +152,22 @@ export default {
             this.shows.forEach((show) => {
                 show.castString = show.cast.join(',').replaceAll(',', ', ');
                 show.directorString = show.director.join(',').replaceAll(',', ', ');
+                console.log(show.id)
 
-                if (show.id in this.seenList) {
+
+                if (this.seenList.includes(show.id)) {
                     show.seen = "✅";
+                    console.log("vu")
                 } else {
                     show.seen = "❌";
+                    console.log("non vu")
                 }
-                if (show.id in this.wishList) {
+                if (this.wishList.includes(show.id)) {
                     show.wishlist = "❤️";
+                    console.log("wishlist")
                 } else {
                     show.wishlist = "🤍";
+                    console.log("non wishlist")
                 }
                 show.ratingStars = "";
                 for (let i = 0; i < show.note; i++) {
