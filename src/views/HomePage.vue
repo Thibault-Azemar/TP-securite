@@ -2,55 +2,60 @@
     <main>
         <h1 class="title">Films and Series</h1>
     </main>
-    <button class="button" @click="addShow()">Add show</button>
-    <input type="text" id="search" v-model="searchText" @input="search">
-    <div>
-        <table class="table is-striped is-fullwidth is-hoverable">
-            <thead>
-                <tr>
-                    <th @click="sort('type')">Type</th>
-                    <th @click="sort('title')">Title</th>
-                    <th @click="sort('director')">Director</th>
-                    <th @click="sort('cast')">Cast</th>
-                    <th @click="sort('description')">Description</th>
-                    <th @click="sort('country')">Country</th>
-                    <th @click="sort('releasedate')">Release date</th>
-                    <th @click="sort('duration')">Duration</th>
-                    <th @click="sort('typeshow')">Genre</th>
-                    <th @click="sort('wishlist')">Note</th>
-                    <th>Wishlist</th>
-                    <th>Regardé</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="show in SortedShows" :key="show.id">
-                    <td>{{ show.type }}</td>
-                    <td v-html="highlightMatches(show.title)"></td>
-                    <td v-html="highlightMatches(show.directorString)"></td>
-                    <td>{{ show.castString }}</td>
-                    <td v-html="highlightMatches(show.description)"></td>
-                    <td v-html="highlightMatches(show.country)"></td>
-                    <td v-html="highlightMatches(show.releasedate)"></td>
-                    <td>{{ show.duration }}</td>
-                    <td v-html="highlightMatches(show.typeshow)"></td>
-                    <td>{{ show.ratingStars }}</td>
-                    <td @click="changeWish(show)">{{ show.wishlist }}</td>
-                    <td @click="changeSeen(show)">{{ show.seen }}</td>
-                    <td>
-                        <button class="button is-small is-danger" @click="deleteShow(show)">Delete</button>
-                        <button class="button is-small is-warning" @click="editShow(show)">Edit</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p>
-          <button @click="prevPage">Previous</button> 
-          <button @click="nextPage">Next</button>
-        </p>
-        debug: sort={{currentSort}}, dir={{currentSortDir}}
-    </div>
-    <AddShowModal v-show="showModal" :show="isShow" @close-modal="showModal = false"/>
+    <div v-if="isLoggedIn">
+      <button class="button" @click="addShow()">Add show</button>
+      <input type="text" id="search" v-model="searchText" @input="search">
+      <div>
+          <table class="table is-striped is-fullwidth is-hoverable">
+              <thead>
+                  <tr>
+                      <th @click="sort('type')">Type</th>
+                      <th @click="sort('title')">Title</th>
+                      <th @click="sort('director')">Director</th>
+                      <th @click="sort('cast')">Cast</th>
+                      <th @click="sort('description')">Description</th>
+                      <th @click="sort('country')">Country</th>
+                      <th @click="sort('releasedate')">Release date</th>
+                      <th @click="sort('duration')">Duration</th>
+                      <th @click="sort('typeshow')">Genre</th>
+                      <th @click="sort('wishlist')">Note</th>
+                      <th>Wishlist</th>
+                      <th>Regardé</th>
+                      <th>Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr v-for="show in SortedShows" :key="show.id">
+                      <td>{{ show.type }}</td>
+                      <td v-html="highlightMatches(show.title)"></td>
+                      <td v-html="highlightMatches(show.directorString)"></td>
+                      <td>{{ show.castString }}</td>
+                      <td v-html="highlightMatches(show.description)"></td>
+                      <td v-html="highlightMatches(show.countryString)"></td>
+                      <td v-html="highlightMatches(show.releasedate)"></td>
+                      <td>{{ show.duration }}</td>
+                      <td v-html="highlightMatches(show.typeshowString)"></td>
+                      <td>{{ show.ratingStars }}</td>
+                      <td @click="changeWish(show)">{{ show.wishlist }}</td>
+                      <td @click="changeSeen(show)">{{ show.seen }}</td>
+                      <td>
+                          <button class="button is-small is-danger" @click="deleteShow(show)">Delete</button>
+                          <button class="button is-small is-warning" @click="editShow(show)">Edit</button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <p>
+            <button @click="prevPage">Previous</button> 
+            <button @click="nextPage">Next</button>
+          </p>
+          debug: sort={{currentSort}}, dir={{currentSortDir}}
+      </div>
+      <AddShowModal v-show="showModal" :show="isShow" @close-modal="showModal = false"/>
+  </div>
+  <div v-else>
+    <p>Vous devez être connecté pour accéder à cette page</p>
+  </div>
 </template>
 <script>
 import { getFirestore, getDocs, collection , doc, setDoc, updateDoc} from "firebase/firestore";
@@ -67,6 +72,8 @@ export default {
     const db = getFirestore();
     const usershows = collection(db, "usershows");
     let isShow = [] | undefined;
+    let isLoggedIn = true;
+    const wish = false;
 
     return {
       showModal: false,
@@ -79,9 +86,11 @@ export default {
       searchText: '',
       currentSort:'name',
       currentSortDir:'asc',
-      pageSize:2,
+      pageSize:10,
       currentPage:1,
-      isShow : isShow
+      isShow : isShow,
+      isLoggedIn : isLoggedIn,
+      wish : wish
     }
   },
   methods:{
@@ -128,6 +137,7 @@ export default {
         },
     getShows: async function () {
             const db = getFirestore();
+
             const showsRef = collection(db, "shows");
             const querySnapshot = await getDocs(showsRef);
 
@@ -144,9 +154,7 @@ export default {
             else {
               querySnapshot2.forEach((doc) => {
                 this.seenList = doc.data().seenlist;
-                console.log(this.seenList)
                 this.wishList = doc.data().wishlist;
-                console.log(this.wishList)
               });
             }
 
@@ -159,6 +167,8 @@ export default {
             this.shows.forEach((show) => {
                 show.castString = show.cast.join(',').replaceAll(',', ', ');
                 show.directorString = show.director.join(',').replaceAll(',', ', ');
+                show.countryString = show.country.join(',').replaceAll(',', ', ');
+                show.typeshowString = show.typeshow.join(',').replaceAll(',', ', ');
                 console.log(show.id)
 
 
@@ -169,21 +179,30 @@ export default {
                     show.seen = "❌";
                     console.log("non vu")
                 }
-                if (this.wishList.includes(show.id)) {
+
+                if (!this.wish)
+                {
+                  if (this.wishList.includes(show.id)) {
                     show.wishlist = "❤️";
-                    console.log("wishlist")
+                  } else {
+                      show.wishlist = "🤍";
+                  }
                 } else {
-                    show.wishlist = "🤍";
-                    console.log("non wishlist")
+                  if (this.wishList.includes(show.id)) {
+                    show.wishlist = "❤️";
+                  } else {
+                      this.shows = this.shows.filter(item => item.id !== show.id);
+                  }
                 }
+                
+
+
+
                 show.ratingStars = "";
                 for (let i = 0; i < show.note; i++) {
                     show.ratingStars += "⭐";
                 }
             });
-
-            
-            
         },
     search: function() {
 
@@ -215,6 +234,12 @@ export default {
 
   },
   beforeMount() {
+    if (window.location.href.includes("wishlist")) {
+      this.wish = true;
+    }
+    else {
+      this.wish = false;
+    }
     this.getShows();
   },
   computed: {
@@ -230,9 +255,9 @@ export default {
         const title = row.title.toLowerCase();
         const directorString = row.directorString.toLowerCase();
         const description = row.description.toLowerCase();
-        const country = row.country.toLowerCase();
+        const country = row.countryString.toLowerCase();
         const releasedate = row.releasedate.toLowerCase();
-        const typeshow = row.typeshow.toLowerCase();
+        const typeshow = row.typeshowString.toLowerCase();
 
         return title.includes(this.searchText.toLowerCase()) || 
         directorString.includes(this.searchText.toLowerCase()) || 

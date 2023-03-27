@@ -3,12 +3,20 @@
     <div class="box modal-new" @click.stop>
         <p v-if="!show"> Ajouter un film ou une série</p>
         <p v-else> Modifier un film ou une série</p>
-        <div class="control">
+        <div v-if="show" class="control">
             <label class="radio">
-                <input type="radio" name="answer" value="Film" :checked="show ? show['type'] === 'film' ? true : false : false">Film
+                <input type="radio" name="answer" value="Film" :checked="show['type'] === 'film' ? true : false">Film
             </label>
             <label class="radio">
-                <input type="radio" name="answer" value="Serie" :checked="show ? show['type'] === 'serie' ? true : false : false">Serie
+                <input type="radio" name="answer" value="Serie" :checked="show['type'] === 'serie' ? true : false">Serie
+            </label>
+        </div>
+        <div v-else class="control">
+            <label class="radio">
+                <input type="radio" name="answer" value="Film">Film
+            </label>
+            <label class="radio">
+                <input type="radio" name="answer" value="Serie">Serie
             </label>
         </div>
         <div class="field">
@@ -58,7 +66,7 @@
             <input class="rating" max="5" step="0.5" type="range" id="note" :value="show? show['note'] : ''">
         </div>
         </div>
-        <p><button class="button is-primary" @click="SaveShow">Submit</button></p>
+        <p><button class="button is-primary" @click="SaveShow(show)">Submit</button></p>
     </div>
     <div class="modal-close is-large" @click="$emit('close-modal')">
     <p> Fermer </p>
@@ -81,8 +89,9 @@
 
     let db = getFirestore();
 
-    function SaveShow(){
+    function SaveShow(show){
         console.log("test")
+
         const picked = document.querySelector('input[name="answer"]:checked').value;
         const title = document.getElementById('title').value;
         const director = document.getElementById('director').value.split(',');
@@ -95,7 +104,10 @@
         const note = document.getElementById('note').value;
 
         const shows = collection(db, "shows");
-        setDoc(doc(shows), {
+        if (!show)
+        {
+            // create
+            setDoc(doc(shows), {
             type : picked,
             title: title,
             director: director,
@@ -107,7 +119,25 @@
             typeshow: typeshow,
             note: note,
             dateAdded: new Date(),
-        });
+         });
+        }
+        else
+        {
+            // update
+            setDoc(doc(db, "shows", show.id), {
+            type : picked,
+            title: title,
+            director: director,
+            cast: cast,
+            description: description,
+            country: country,
+            releasedate: releasedate,
+            duration: duration,
+            typeshow: typeshow,
+            note: note,
+         });
+        }
+        
 
         this.$emit('close-modal');
 
