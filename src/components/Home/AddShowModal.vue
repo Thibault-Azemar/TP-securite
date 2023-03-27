@@ -5,10 +5,10 @@
         <p v-else> Modifier un film ou une série</p>
         <div class="control">
             <label class="radio">
-                <input type="radio" name="answer" value="Film" :checked="show['type'] === 'film' ? true : false">Film
+                <input type="radio" name="answer" value="Film" :checked="show ? show['type'] === 'film' ? true : false : false">Film
             </label>
             <label class="radio">
-                <input type="radio" name="answer" value="Serie" :checked="show['type'] === 'serie' ? true : false">Serie
+                <input type="radio" name="answer" value="Serie" :checked="show ? show['type'] === 'serie' ? true : false : false">Serie
             </label>
         </div>
         <div class="field">

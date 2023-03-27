@@ -2,7 +2,7 @@
     <main>
         <h1 class="title">Films and Series</h1>
     </main>
-    <button class="button" @click="showModal = true">Add show</button>
+    <button class="button" @click="addShow()">Add show</button>
     <input type="text" id="search" v-model="searchText" @input="search">
     <div>
         <table class="table is-striped is-fullwidth is-hoverable">
@@ -203,6 +203,10 @@ export default {
     },
     editShow:function(show) {
       this.isShow = show;
+      this.showModal = true;
+    },
+    addShow:function() {
+      this.isShow = null;
       this.showModal = true;
     },
     deleteShow:function() {
