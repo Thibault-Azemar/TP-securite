@@ -1,60 +1,61 @@
 <template>
     <div class="modal-overlay"  @click="$emit('close-modal')">
     <div class="box modal-new" @click.stop>
-        <p> Ajouter un film ou une série</p>
+        <p v-if="!show"> Ajouter un film ou une série</p>
+        <p v-else> Modifier un film ou une série</p>
         <div class="control">
             <label class="radio">
-                <input type="radio" name="answer" value="Film" v-model="picked">Film
+                <input type="radio" name="answer" value="Film" :checked="show ? show['type'] === 'film' ? true : false : false">Film
             </label>
             <label class="radio">
-                <input type="radio" name="answer" value="Serie" v-model="picked">Serie
+                <input type="radio" name="answer" value="Serie" :checked="show ? show['type'] === 'serie' ? true : false : false">Serie
             </label>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Titre du film" id="title" v-model="title">
+            <input class="input" type="text" placeholder="Titre du film" id="title" :value="show? show['title'] : ''">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <textarea class="textarea" placeholder="Description" id = "description" v-model="description"></textarea>
+            <textarea class="textarea" placeholder="Description" id = "description" :value="show? show['description'] : ''"></textarea>
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Nom du/des réalisateurs" id = "director" v-model="director">
+            <input class="input" type="text" placeholder="Nom du/des réalisateurs" id = "director" :value="show? show['director'] : ''">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Nom du/des acteurs" id = "cast" v-model="cast">
+            <input class="input" type="text" placeholder="Nom du/des acteurs" id = "cast" :value="show? show['cast'] : ''">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Pays de réalisation" id = "country" v-model="country">
+            <input class="input" type="text" placeholder="Pays de réalisation" id = "country" :value="show? show['country'] : ''">
         </div>
         </div>
         <div class="field">
             <label class="label">Date de sortie</label>
         <div class="control">
-            <input class="input" type="text" placeholder="Date de sortie (année)" id = "releasedate" v-model="releasedate">
+            <input class="input" type="text" placeholder="Date de sortie (année)" id = "releasedate" :value="show? show['releasedate'] : ''">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Durée du film (en minutes)" id = "duration" v-model="duration">
+            <input class="input" type="text" placeholder="Durée du film (en minutes)" id = "duration" :value="show? show['duration'] : ''">
         </div>
         </div>
         <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="Type du film" id = "typeshow" v-model="typeshow">
+            <input class="input" type="text" placeholder="Type du film" id = "typeshow" :value="show? show['typeshow'] : ''">
         </div>
         </div>
         <div class="field">
             <label class="label">Note</label>
         <div class="control">
-            <input class="rating" max="5" step="0.5" type="range" id="note" v-model="note">
+            <input class="rating" max="5" step="0.5" type="range" id="note" :value="show? show['note'] : ''">
         </div>
         </div>
         <p><button class="button is-primary" @click="SaveShow">Submit</button></p>
@@ -70,6 +71,9 @@
 
     export default {
         name: "NewShow",
+        props: {
+            show: Object,
+        },
         methods: {
             SaveShow : SaveShow,
         },
