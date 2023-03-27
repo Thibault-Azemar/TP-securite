@@ -20,6 +20,7 @@
                     <th @click="sort('wishlist')">Note</th>
                     <th>Wishlist</th>
                     <th>Regardé</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +37,10 @@
                     <td>{{ show.ratingStars }}</td>
                     <td @click="changeWish(show)">{{ show.wishlist }}</td>
                     <td @click="changeSeen(show)">{{ show.seen }}</td>
+                    <td>
+                        <button class="button is-small is-danger" @click="deleteShow(show)">Delete</button>
+                        <button class="button is-small is-warning" @click="editShow(show)">Edit</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -45,7 +50,7 @@
         </p>
         debug: sort={{currentSort}}, dir={{currentSortDir}}
     </div>
-    <AddShowModal v-show="showModal" @close-modal="showModal = false"/>
+    <AddShowModal v-show="showModal" :show="isShow" @close-modal="showModal = false"/>
 </template>
 <script>
 import { getFirestore, getDocs, collection , doc, setDoc, updateDoc} from "firebase/firestore";
@@ -61,6 +66,7 @@ export default {
     const auth = getAuth();
     const db = getFirestore();
     const usershows = collection(db, "usershows");
+    let isShow = [] | undefined;
 
     return {
       showModal: false,
@@ -74,7 +80,8 @@ export default {
       currentSort:'name',
       currentSortDir:'asc',
       pageSize:2,
-      currentPage:1
+      currentPage:1,
+      isShow : isShow
     }
   },
   methods:{
@@ -194,6 +201,13 @@ export default {
     prevPage:function() {
       if(this.currentPage > 1) this.currentPage--;
     },
+    editShow:function(show) {
+      this.isShow = show;
+      this.showModal = true;
+    },
+    deleteShow:function() {
+
+    }
 
   },
   beforeMount() {
