@@ -25,10 +25,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "register" */ '../views/HomePage.vue'),
         props : { wishlist : true },
         // refresh la page pour que le composant soit rechargé
-        beforeEnter: (to, from, next) => {
-            next()
-        }
-
+        
     }
 ]
 

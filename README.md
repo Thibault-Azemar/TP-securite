@@ -34,3 +34,8 @@ https://app.netlify.com/sites/projectsecurityta/settings/domain
 
 https://projectsecurityta.netlify.app/
 
+### Squash
+
+admin
+admin
+
