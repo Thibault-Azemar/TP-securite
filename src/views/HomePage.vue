@@ -3,7 +3,7 @@
         <h1 class="title">Films and Series</h1>
     </main>
     <div v-if="isLoggedIn">
-      <button class="button" @click="addShow()">Add show</button>
+      <button id="addshow" class="button" @click="addShow()">Add show</button>
       <input type="text" id="search" v-model="searchText" @input="search">
       <div>
           <table class="table is-striped is-fullwidth is-hoverable">

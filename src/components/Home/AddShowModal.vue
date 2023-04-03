@@ -5,7 +5,7 @@
         <p v-else> Modifier un film ou une série</p>
         <div v-if="show" class="control">
             <label class="radio">
-                <input type="radio" name="answer" value="Film" :checked="show['type'] === 'film' ? true : false">Film
+                <input type="radio" id="filmupdate" name="answer" value="Film" :checked="show['type'] === 'film' ? true : false">Film
             </label>
             <label class="radio">
                 <input type="radio" name="answer" value="Serie" :checked="show['type'] === 'serie' ? true : false">Serie
@@ -13,7 +13,7 @@
         </div>
         <div v-else class="control">
             <label class="radio">
-                <input type="radio" name="answer" value="Film">Film
+                <input type="radio" id="film" name="answer" value="Film">Film
             </label>
             <label class="radio">
                 <input type="radio" name="answer" value="Serie">Serie
@@ -66,7 +66,7 @@
             <input class="rating" max="5" step="0.5" type="range" id="note" :value="show? show['note'] : ''">
         </div>
         </div>
-        <p><button class="button is-primary" @click="SaveShow(show)">Submit</button></p>
+        <p><button id="submit" class="button is-primary" @click="SaveShow(show)">Submit</button></p>
     </div>
     <div class="modal-close is-large" @click="$emit('close-modal')">
     <p> Fermer </p>
