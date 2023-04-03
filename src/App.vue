@@ -4,7 +4,7 @@
     <ul v-if="isLoggedIn">
       <li><router-link class="link is-info" to="/"> Home </router-link></li>
       <li><router-link class="link is-info" to="/wishlist"> Wishlist </router-link></li>
-      <li><a class="link is-info" @click="sign">Logout</a></li>
+      <li id="logout"><a class="link is-info" @click="sign">Logout</a></li>
     </ul>
     <ul v-else>
       <li><router-link class="link is-info" to="/"> Home </router-link></li>

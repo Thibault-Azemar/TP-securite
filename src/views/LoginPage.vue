@@ -6,7 +6,7 @@
     <div class="field">
         <label class="label">Email</label>
         <div class="control has-icons-left">
-            <input class="input" type="text" placeholder="e.g. alex@example.com" v-model="email" />
+            <input class="input" type="text" placeholder="e.g. alex@example.com" v-model="email" id="email" />
             <span class="icon is-medium is-left">
                 <i class="fas fa-envelope"></i>
             </span>
@@ -16,11 +16,11 @@
     <div class="field">
         <label class="label">Password</label>
         <div class="control">
-            <input class="input" type="password" placeholder="********" v-model="password" />
+            <input class="input" type="password" placeholder="********" v-model="password" id="password" />
         </div>
     </div>
 
-    <p><button class="button is-primary" @click="login">Submit</button></p>
+    <p><button id="submit" class="button is-primary" @click="login">Submit</button></p>
 
     <p class="help is-danger">{{ errMsg }}</p>
 
