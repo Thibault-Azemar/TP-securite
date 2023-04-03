@@ -5,7 +5,7 @@
   <div class="field">
     <label class="label">Email</label>
     <div class="control has-icons-left">
-      <input class="input" type="text" placeholder="Email" v-model="email" />
+      <input class="input" type="text" placeholder="Email" v-model="email" id="email" />
       <span class="icon is-medium is-left">
         <i class="fas fa-envelope"></i>
       </span>
@@ -14,17 +14,17 @@
   <div class="field">
     <label class="label">Password</label>
     <div class="control">
-      <input class="input" type="password" placeholder="Password" v-model="password" />
+      <input class="input" type="password" placeholder="Password" v-model="password" id="password" />
     </div>
   </div>
   <div class="field">
     <label class="label">Repeat Password</label>
     <div class="control">
-      <input class="input" type="password" placeholder="Repeat password" v-model="password2" />
+      <input class="input" type="password" placeholder="Repeat password" v-model="password2" id="password2"/>
     </div>
   </div>
 
-  <p><button class="button is-primary" @click="register">Submit</button></p>
+  <p><button id="submit" class="button is-primary" @click="register">Submit</button></p>
 
   <p class="help is-danger" v-if="password.length < 8"> Le mot de passe doit faire 8 caractères minimum</p>
   <p class="help is-danger" v-if="password.search(/(?=.*?[a-z])/)">Le mot de passe doit contenir au moins une lettre minuscule</p>

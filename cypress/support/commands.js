@@ -26,9 +26,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', (email, password) => {
-    cy.session(
-      email,
-      () => {
+    
         cy.visit('/login')
 
         // Login : test@test.fr et Mot de passe : test
@@ -39,6 +37,5 @@ Cypress.Commands.add('login', (email, password) => {
         cy.get('button[id="submit"]').click()
 
         cy.get('li[id="logout"]').should('contain', 'Logout')
-      }
-    )
+
   })

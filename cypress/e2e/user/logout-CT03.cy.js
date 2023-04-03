@@ -1,6 +1,10 @@
 /* eslint-disable no-undef */
-describe('template spec', () => {
+describe('User Logout', () => {
   it('passes', () => {
-    cy.visit('https://example.cypress.io')
+    cy.login("test@test.fr", "Test123$")
+    cy.visit('/')
+    cy.get('a').get('li[id="logout"]').click()
+
+    cy.get('li[id="logout"]').should('not.exist')
   })
 })
